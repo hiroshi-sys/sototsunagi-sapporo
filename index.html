@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ソトツナギ札幌</title>
+<meta name="description" content="引きこもり・外出困難な方向けの総合代行サービス。電話なし・メールのみで完結。">
+<style>
+  :root{
+    --bg:#111; --fg:#fff; --text:#222; --muted:#6b7280; --line:#e5e7eb;
+    --primary:#2563eb; --accent:#10b981; --danger:#ef4444;
+    --surface:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0; padding:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,'Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif; color:var(--text); line-height:1.7}
+  a{color:inherit}
+  /* ヘッダー */
+  header{position:sticky; top:0; z-index:20; backdrop-filter:saturate(180%) blur(8px); background:rgba(255,255,255,.92); border-bottom:1px solid var(--line)}
+  .container{max-width:1100px; margin:0 auto; padding:0 20px}
+  .head{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
+  .brand{display:flex; align-items:center; gap:10px}
+  .logo{width:40px; height:40px; border-radius:999px; background:var(--primary); display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:800}
+  nav a{margin-left:18px; text-decoration:none; color:#111}
+  nav a:hover{color:var(--primary)}
+  /* ヒーロー */
+  .hero{background:var(--bg); color:var(--fg); padding:72px 0}
+  .hero h1{margin:0 0 10px; font-size:clamp(28px,5vw,44px)}
+  .badge{display:inline-flex; align-items:center; gap:8px; color:var(--primary); background:rgba(37,99,235,.12); padding:8px 12px; border-radius:999px; font-weight:600; font-size:14px}
+  .grid{display:grid; gap:24px}
+  @media(min-width:920px){ .grid-2{grid-template-columns:1fr 1fr} .grid-3{grid-template-columns:repeat(3,1fr)} .grid-2-3{grid-template-columns:2fr 3fr} }
+  /* セクション共通 */
+  section{padding:64px 0}
+  h2.section-title{font-size:clamp(22px,4.2vw,32px); margin:0 0 8px; text-align:center}
+  p.section-lead{margin:0 auto 28px; color:var(--muted); text-align:center; max-width:720px}
+  /* カード */
+  .cards{display:grid; gap:16px}
+  @media(min-width:760px){ .cards-2{grid-template-columns:repeat(2,1fr)} }
+  @media(min-width:980px){ .cards-3{grid-template-columns:repeat(3,1fr)} }
+  .card{border:1px solid var(--line); border-radius:14px; background:#fff}
+  .card .body{padding:18px}
+  .iconbox{width:48px; height:48px; border-radius:10px; background:rgba(37,99,235,.12); display:flex; align-items:center; justify-content:center; color:var(--primary); margin-bottom:10px}
+  .price{font-weight:800; color:var(--primary); font-size:22px}
+  .muted{color:var(--muted)}
+  .list{padding-left:0; list-style:none; margin:0}
+  .list li{display:flex; gap:8px; align-items:flex-start; margin:8px 0; color:var(--muted)}
+  .check{color:var(--accent); margin-top:2px}
+  .cross{color:var(--danger); margin-top:2px}
+  /* プラン */
+  .plan{position:relative}
+  .plan .badge{position:absolute; left:50%; transform:translate(-50%,-18px); background:var(--primary); color:#fff}
+  .plan.reco{border-color:var(--primary); box-shadow:0 8px 22px rgba(37,99,235,.15)}
+  /* ボタン */
+  .btn{display:inline-block; text-decoration:none; padding:10px 16px; border-radius:999px; font-weight:600; text-align:center; border:1px solid var(--line); background:#fff}
+  .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
+  .btn.block{width:100%}
+  .btn:hover{filter:brightness(1.05)}
+  /* 情報ブロック */
+  .feature{ text-align:center }
+  .pill{display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:999px; background:rgba(37,99,235,.12); color:var(--primary); margin:0 auto 10px}
+  /* 背景 */
+  .muted-bg{background:var(--surface)}
+  /* フッター */
+  footer{border-top:1px solid var(--line); background:#f6f7f9; color:var(--muted)}
+  /* トースト */
+  #toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111; color:#fff; padding:12px 16px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,.2); opacity:0; pointer-events:none; transition:opacity .25s}
+  #toast.show{opacity:1}
+  /* 小さめ画面のナビ */
+  .menu{display:none}
+  @media(max-width:720px){
+    nav{display:none}
+    .menu{display:inline-block}
+    #drawer{display:none; position:fixed; inset:0 0 auto auto; top:56px; right:12px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px; box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    #drawer a{display:block; padding:8px 12px; text-decoration:none; color:#111}
+    #drawer a + a{border-top:1px solid var(--line)}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container head">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">❤</div>
+      <div>
+        <div style="font-weight:800">ソトツナギ札幌</div>
+        <div style="font-size:12px; color:var(--muted)">あなたの代わりに、外の世界とつながる</div>
+      </div>
+    </div>
+    <nav aria-label="グローバル">
+      <a href="#services">サービス</a>
+      <a href="#pricing">料金</a>
+      <a href="#about">私たちについて</a>
+      <a href="#contact">お問い合わせ</a>
+    </nav>
+    <button class="menu btn" aria-controls="drawer" aria-expanded="false">メニュー</button>
+  </div>
+  <div id="drawer" role="dialog" aria-label="メニュー">
+    <a href="#services">サービス</a>
+    <a href="#pricing">料金</a>
+    <a href="#about">私たちについて</a>
+    <a href="#contact">お問い合わせ</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container grid grid-2">
+    <div>
+      <div class="badge">
+        <!-- map-pin -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 22s8-7.16 8-12A8 8 0 1 0 4 10c0 4.84 8 12 8 12Zm0-9a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/></svg>
+        札幌圏内でサービス展開中
+      </div>
+      <h1>外に出られなくても、<br><span style="color:var(--primary)">あなたの人生は止まらない</span></h1>
+      <p class="muted">
+        引きこもりや外出が困難な方のために、私たちがあなたの代わりに外の世界とつながります。
+        役所での手続きから日常生活のサポートまで、電話なし・メールのみで完結します。
+      </p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px">
+        <a class="btn primary" href="#services">サービスを見る</a>
+        <a class="btn" href="#contact">お問い合わせ</a>
+      </div>
+    </div>
+    <div>
+      <div style="aspect-ratio:1/1; border-radius:24px; background:linear-gradient(135deg, rgba(37,99,235,.22), rgba(16,185,129,.22)); display:flex; align-items:center; justify-content:center;">
+        <div style="text-align:center; padding:24px">
+          <div style="font-size:72px; color:var(--primary); line-height:1" aria-hidden="true">❤</div>
+          <p style="font-weight:800; font-size:22px; margin:10px 0 0">120以上の<br>代行サービス</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="muted-bg">
+  <div class="container">
+    <h2 class="section-title">5つのサポートカテゴリー</h2>
+    <p class="section-lead">あなたのニーズに合わせた、きめ細やかなサービスをご提供します</p>
+
+    <div class="cards cards-3">
+      <!-- くらし -->
+      <div class="card">
+        <div class="body">
+          <div class="iconbox" aria-hidden="true">🏠</div>
+          <h3>くらしサポート</h3>
+          <p class="muted">日常生活の基盤を守る</p>
+          <div class="price">2,500円/時間 <span class="muted">〜</span></div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>生活環境整備（掃除・片付け・ゴミ出し）</span></li>
+            <li><span class="check">✔</span><span>食事・栄養サポート</span></li>
+            <li><span class="check">✔</span><span>季節・天候対応（雪かきなど）</span></li>
+            <li><span class="check">✔</span><span>不動産・住居情報収集</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- すこやか -->
+      <div class="card">
+        <div class="body">
+          <div class="iconbox" aria-hidden="true">❤</div>
+          <h3>すこやかサポート</h3>
+          <p class="muted">心と体の健康を支える</p>
+          <div class="price">3,000円/時間 <span class="muted">〜</span></div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>病院予約代行</span></li>
+            <li><span class="check">✔</span><span>オンライン診療サポート</span></li>
+            <li><span class="check">✔</span><span>訪問美容の手配</span></li>
+            <li><span class="check">✔</span><span>ペットシッター手配</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- きずな -->
+      <div class="card">
+        <div class="body">
+          <div class="iconbox" aria-hidden="true">🤝</div>
+          <h3>きずなサポート</h3>
+          <p class="muted">人とのつながりを維持する</p>
+          <div class="price">3,500円/時間 <span class="muted">〜</span></div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>SNS代行投稿</span></li>
+            <li><span class="check">✔</span><span>メール返信サポート</span></li>
+            <li><span class="check">✔</span><span>傾聴サービス（オンライン）</span></li>
+            <li><span class="check">✔</span><span>冠婚葬祭の手配</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- みらい -->
+      <div class="card">
+        <div class="body">
+          <div class="iconbox" aria-hidden="true">💼</div>
+          <h3>みらいサポート</h3>
+          <p class="muted">成長と自己実現を応援する</p>
+          <div class="price">3,000円/時間 <span class="muted">〜</span></div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>履歴書作成サポート</span></li>
+            <li><span class="check">✔</span><span>求人情報収集</span></li>
+            <li><span class="check">✔</span><span>オンライン学習サポート</span></li>
+            <li><span class="check">✔</span><span>趣味の情報収集</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- あんしん -->
+      <div class="card">
+        <div class="body">
+          <div class="iconbox" aria-hidden="true">🛡️</div>
+          <h3>あんしんサポート</h3>
+          <p class="muted">複雑な問題を解決する</p>
+          <div class="price">4,000円/時間 <span class="muted">〜</span></div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>役所での手続き代行</span></li>
+            <li><span class="check">✔</span><span>申請書類作成サポート</span></li>
+            <li><span class="check">✔</span><span>PC設定サポート（リモート）</span></li>
+            <li><span class="check">✔</span><span>各種リサーチ</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="muted" style="text-align:center; margin-top:12px">
+      ※最低利用時間：1時間〜　※交通費別途（札幌市内500円、市外1,000円）
+    </p>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <h2 class="section-title">お得なサブスクリプションプラン</h2>
+    <p class="section-lead">定期利用の方向けに割引プランをご用意しています</p>
+
+    <div class="cards cards-3" style="max-width:1000px; margin:0 auto">
+      <!-- ライト -->
+      <div class="card plan">
+        <div class="body">
+          <h3 style="margin:0 0 4px">ライトプラン</h3>
+          <div class="muted">月4回・各2時間</div>
+          <div style="margin:12px 0">
+            <span class="price">18,000円</span><span class="muted">/月</span><br>
+            <span class="muted" style="text-decoration:line-through">20,000円</span>
+            <span style="color:var(--accent); font-weight:700; margin-left:6px">10%OFF</span>
+          </div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>くらしサポートのみ</span></li>
+            <li><span class="check">✔</span><span>メールサポート</span></li>
+            <li><span class="check">✔</span><span>進捗報告</span></li>
+          </ul>
+          <a class="btn block" href="#contact">お問い合わせ</a>
+        </div>
+      </div>
+
+      <!-- スタンダード（おすすめ） -->
+      <div class="card plan reco">
+        <div class="badge">おすすめ</div>
+        <div class="body">
+          <h3 style="margin:0 0 4px">スタンダードプラン</h3>
+          <div class="muted">月8回・各2時間</div>
+          <div style="margin:12px 0">
+            <span class="price">34,000円</span><span class="muted">/月</span><br>
+            <span class="muted" style="text-decoration:line-through">40,000円</span>
+            <span style="color:var(--accent); font-weight:700; margin-left:6px">15%OFF</span>
+          </div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>全カテゴリー対応</span></li>
+            <li><span class="check">✔</span><span>あんしんサポート月2回まで</span></li>
+            <li><span class="check">✔</span><span>優先対応</span></li>
+            <li><span class="check">✔</span><span>詳細レポート</span></li>
+          </ul>
+          <a class="btn primary block" href="#contact">お問い合わせ</a>
+        </div>
+      </div>
+
+      <!-- プレミアム -->
+      <div class="card plan">
+        <div class="body">
+          <h3 style="margin:0 0 4px">プレミアムプラン</h3>
+          <div class="muted">月12回・各2時間</div>
+          <div style="margin:12px 0">
+            <span class="price">48,000円</span><span class="muted">/月</span><br>
+            <span class="muted" style="text-decoration:line-through">60,000円</span>
+            <span style="color:var(--accent); font-weight:700; margin-left:6px">20%OFF</span>
+          </div>
+          <ul class="list">
+            <li><span class="check">✔</span><span>全カテゴリー無制限</span></li>
+            <li><span class="check">✔</span><span>専任コーディネーター</span></li>
+            <li><span class="check">✔</span><span>24時間以内対応保証</span></li>
+            <li><span class="check">✔</span><span>月次レポート</span></li>
+          </ul>
+          <a class="btn block" href="#contact">お問い合わせ</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="muted-bg">
+  <div class="container">
+    <h2 class="section-title">ソトツナギ札幌の特徴</h2>
+    <div class="grid grid-3" style="gap:24px; margin-top:24px">
+      <div class="feature">
+        <div class="pill" aria-hidden="true">✉</div>
+        <h4>電話対応なし</h4>
+        <p class="muted">すべてのお問い合わせはオンラインフォームまたはメールで受け付けます。お電話が苦手な方も安心です。</p>
+      </div>
+      <div class="feature">
+        <div class="pill" aria-hidden="true">📍</div>
+        <h4>札幌圏内完結</h4>
+        <p class="muted">札幌市および近郊に特化。地域に密着したきめ細やかな対応が可能です。</p>
+      </div>
+      <div class="feature">
+        <div class="pill" aria-hidden="true">🛡️</div>
+        <h4>代理人として対応</h4>
+        <p class="muted">役所での手続きや窓口対応など、あなたの代わりに私たちが対応します。委任状で対応範囲が広がります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container" style="max-width:860px">
+    <h2 class="section-title">安全のため対応できないこと</h2>
+    <p class="section-lead">犯罪リスク回避のため、以下のサービスは提供しておりません</p>
+    <div class="card">
+      <div class="body">
+        <ul class="list">
+          <li><span class="cross">✖</span><span>荷物の持ち運び（受け子リスクのため）</span></li>
+          <li><span class="cross">✖</span><span>現金の受け渡し・預かり</span></li>
+          <li><span class="cross">✖</span><span>貴重品の運搬・保管</span></li>
+          <li><span class="cross">✖</span><span>身分証明書等の重要書類の持ち運び</span></li>
+        </ul>
+        <div style="margin-top:14px; background:var(--surface); border:1px solid var(--line); padding:12px; border-radius:10px; color:var(--muted); font-size:14px">
+          ※書類の受け取り・提出は対応可能ですが、身分証明書やマイナンバーカードなどの重要書類の持ち運びは安全上お断りしております。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="muted-bg">
+  <div class="container" style="max-width:900px">
+    <h2 class="section-title">私たちについて</h2>
+    <div style="display:grid; gap:14px; margin-top:10px">
+      <p class="muted" style="font-size:18px">
+        ソトツナギ札幌は、引きこもりや外出が困難な方々の生活の質を向上させることを目的とした総合代行サービスです。
+      </p>
+      <p class="muted" style="font-size:18px">
+        「外に出られなくても、あなたの人生は止まらない」という信念のもと、日常生活のサポートから役所での手続き代行まで、
+        120以上の多様なサービスを提供しています。
+      </p>
+      <p class="muted" style="font-size:18px">
+        やりとりはメールやオンラインフォームで完結し、電話対応は一切ありません。あなたのペースで安心してご利用いただけます。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container" style="max-width:760px">
+    <h2 class="section-title">お問い合わせ</h2>
+    <p class="section-lead">ご質問やご相談は、以下のフォームからお気軽にどうぞ</p>
+
+    <div class="card">
+      <div class="body">
+        <form id="contact-form">
+          <div style="display:grid; gap:12px">
+            <label>お名前 <span style="color:var(--danger)">*</span>
+              <input required name="name" type="text" placeholder="山田 太郎" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:8px">
+            </label>
+            <label>メールアドレス <span style="color:var(--danger)">*</span>
+              <input required name="email" type="email" placeholder="example@email.com" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:8px">
+            </label>
+            <label>ご希望のサービスカテゴリー
+              <select name="category" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:8px">
+                <option value="">選択してください</option>
+                <option value="life">くらしサポート（2,500円/時間）</option>
+                <option value="health">すこやかサポート（3,000円/時間）</option>
+                <option value="connection">きずなサポート（3,500円/時間）</option>
+                <option value="career">みらいサポート（3,000円/時間）</option>
+                <option value="procedure">あんしんサポート（4,000円/時間）</option>
+                <option value="subscription">サブスクリプションプラン</option>
+                <option value="other">その他</option>
+              </select>
+            </label>
+            <label>お問い合わせ内容 <span style="color:var(--danger)">*</span>
+              <textarea required name="message" rows="6" placeholder="具体的なご相談内容をご記入ください" style="width:100%; padding:10px; border:1px solid var(--line); border-radius:8px"></textarea>
+            </label>
+            <div style="background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px">
+              <div style="display:flex; gap:8px; align-items:flex-start; font-size:14px">
+                <span style="color:var(--primary); margin-top:2px">✉</span>
+                <div>
+                  <div style="font-weight:700">メールでのご連絡</div>
+                  <div class="muted">お問い合わせ後、メールにてご連絡いたします（電話連絡はありません）</div>
+                </div>
+              </div>
+              <div style="display:flex; gap:8px; align-items:flex-start; font-size:14px; margin-top:8px">
+                <span style="color:var(--primary); margin-top:2px">⏱</span>
+                <div>
+                  <div style="font-weight:700">返信時間</div>
+                  <div class="muted">通常1–2営業日以内にご返信いたします</div>
+                </div>
+              </div>
+            </div>
+            <button class="btn primary" type="submit" style="width:100%; padding:14px; font-size:16px">送信する</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container" style="padding:28px 20px">
+    <div class="grid grid-3" style="gap:20px">
+      <div>
+        <div class="brand">
+          <div class="logo" aria-hidden="true">❤</div>
+          <div>
+            <div style="font-weight:800">ソトツナギ札幌</div>
+            <div style="font-size:12px; color:var(--muted)">外の世界とつながる</div>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:10px">引きこもり・外出困難な方々のための総合代行サービス</p>
+      </div>
+      <div>
+        <h5 style="margin:0 0 8px">サービス</h5>
+        <div class="muted" style="display:grid; gap:6px; font-size:14px">
+          <a href="#services">くらしサポート</a>
+          <a href="#services">すこやかサポート</a>
+          <a href="#services">きずなサポート</a>
+          <a href="#services">みらいサポート</a>
+          <a href="#services">あんしんサポート</a>
+        </div>
+      </div>
+      <div>
+        <h5 style="margin:0 0 8px">サービスエリア</h5>
+        <p class="muted" style="margin:0 0 18px">📍 札幌市およびその近郊エリア</p>
+        <p class="muted" style="font-size:12px; margin:0">© 2025 ソトツナギ札幌. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite">お問い合わせを受け付けました。メールにてご連絡いたします。</div>
+
+<script>
+  // モバイルメニュー
+  const menuBtn = document.querySelector('.menu');
+  const drawer  = document.getElementById('drawer');
+  if(menuBtn){
+    menuBtn.addEventListener('click', () => {
+      const open = drawer.style.display === 'block';
+      drawer.style.display = open ? 'none' : 'block';
+      menuBtn.setAttribute('aria-expanded', String(!open));
+    });
+  }
+
+  // 簡易フォーム送信（デモ）
+  const form  = document.getElementById('contact-form');
+  const toast = document.getElementById('toast');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // 実送信の代わりにトースト表示
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+    form.reset();
+  });
+
+  // ★後で実送信に切り替える場合：
+  // 1) Googleフォームを作成 → 「回答のURL」を取得
+  // 2) 上の submit 処理で fetch() してPOST または フォームの action にそのURLを設定
+  // 3) メール直書きはスパムが増える可能性があるため、フォーム経由が安心です
+</script>
+</body>
+</html>
