@@ -21,8 +21,8 @@
   .head{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
   .brand{display:flex; align-items:center; gap:10px}
   .logo{width:40px; height:40px; border-radius:999px; background:var(--primary); display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:800}
-  nav a{margin-left:18px; text-decoration:none; color:#111}
-  nav a:hover{color:var(--primary)}
+  nav.global-nav a{margin-left:18px; text-decoration:none; color:#111}
+  nav.global-nav a:hover{color:var(--primary)}
 
   /* ヒーロー */
   .hero{background:var(--bg); color:var(--fg); padding:72px 0}
@@ -78,25 +78,33 @@
   /* 小さめ画面のナビ */
   .menu{display:none}
   @media(max-width:720px){
-    nav{display:none}
+    nav.global-nav{display:none}
     .menu{display:inline-block}
     #drawer{display:none; position:fixed; inset:0 0 auto auto; top:56px; right:12px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px; box-shadow:0 10px 30px rgba(0,0,0,.15)}
     #drawer a{display:block; padding:8px 12px; text-decoration:none; color:#111}
     #drawer a + a{border-top:1px solid var(--line)}
   }
 
-  /* —— 重複ナビ除去（確実版） —— */
-  /* 正規ナビ以外の nav を非表示 */
-  nav:not(.global-nav){ display:none !important; }
-
-  /* ヘッダー直後に段落/リスト/任意ブロックで現れる重複リンク列も非表示 */
-  header + *:is(p,nav,div,ul,ol):has(> a[href="#services"]):has(> a[href="#pricing"]):has(> a[href="#about"]):has(> a[href="#contact"]) {
-    display:none !important;
+  /* 重複要素の完全削除 - より強力なルール */
+  body > :is(p,nav,div,ul,ol,section,header) a[href="#services"]:not(.global-nav a):not(#drawer a) {
+    display: none !important;
   }
-
-  /* 本文直下に裸で現れた段落の重複リンク列も非表示（保険） */
-  body > p:has(a[href="#services"]):has(a[href="#pricing"]):has(a[href="#about"]):has(a[href="#contact"]) {
-    display:none !important;
+  body > :is(p,nav,div,ul,ol,section,header) a[href="#pricing"]:not(.global-nav a):not(#drawer a) {
+    display: none !important;
+  }
+  body > :is(p,nav,div,ul,ol,section,header) a[href="#about"]:not(.global-nav a):not(#drawer a) {
+    display: none !important;
+  }
+  body > :is(p,nav,div,ul,ol,section,header) a[href="#contact"]:not(.global-nav a):not(#drawer a) {
+    display: none !important;
+  }
+  
+  /* ヘッダー直後の要素に重複リンクがある場合は非表示 */
+  header + * {
+    display: none !important;
+  }
+  header + section {
+    display: block !important;
   }
 </style>
 </head>
@@ -186,10 +194,10 @@
           <p class="muted">心と体の健康を支える</p>
           <div class="price">3,000円/時間 <span class="muted">〜</span></div>
           <ul class="list">
-            <li><span class="check">✔</span><span>病院予約代行</span></li>
-            <li><span class="check">✔</span><span>オンライン診療サポート</span></li>
-            <li><span class="check">✔</span><span>訪問美容の手配</span></li>
-            <li><span class="check">✔</span><span>ペットシッター手配</span></li>
+            <li><span class="check">✔</span><span>健康管理・通院同行</span></li>
+            <li><span class="check">✔</span><span>薬局への薬の受け取り</span></li>
+            <li><span class="check">✔</span><span>メンタルヘルスサポート</span></li>
+            <li><span class="check">✔</span><span>健康情報収集・レポート作成</span></li>
           </ul>
         </div>
       </div>
@@ -197,15 +205,15 @@
       <!-- きずな -->
       <div class="card">
         <div class="body">
-          <div class="iconbox" aria-hidden="true">🤝</div>
+          <div class="iconbox" aria-hidden="true">👥</div>
           <h3>きずなサポート</h3>
           <p class="muted">人とのつながりを維持する</p>
           <div class="price">3,500円/時間 <span class="muted">〜</span></div>
           <ul class="list">
-            <li><span class="check">✔</span><span>SNS代行投稿</span></li>
-            <li><span class="check">✔</span><span>メール返信サポート</span></li>
-            <li><span class="check">✔</span><span>傾聴サービス（オンライン）</span></li>
-            <li><span class="check">✔</span><span>冠婚葬祭の手配</span></li>
+            <li><span class="check">✔</span><span>家族・友人への連絡代行</span></li>
+            <li><span class="check">✔</span><span>オンライン交流イベント参加</span></li>
+            <li><span class="check">✔</span><span>SNS運用・コミュニティ管理</span></li>
+            <li><span class="check">✔</span><span>ギフト選定・手配</span></li>
           </ul>
         </div>
       </div>
@@ -213,15 +221,15 @@
       <!-- みらい -->
       <div class="card">
         <div class="body">
-          <div class="iconbox" aria-hidden="true">💼</div>
+          <div class="iconbox" aria-hidden="true">🎯</div>
           <h3>みらいサポート</h3>
           <p class="muted">成長と自己実現を応援する</p>
           <div class="price">3,000円/時間 <span class="muted">〜</span></div>
           <ul class="list">
-            <li><span class="check">✔</span><span>履歴書作成サポート</span></li>
-            <li><span class="check">✔</span><span>求人情報収集</span></li>
-            <li><span class="check">✔</span><span>オンライン学習サポート</span></li>
-            <li><span class="check">✔</span><span>趣味の情報収集</span></li>
+            <li><span class="check">✔</span><span>教育・職業訓練情報収集</span></li>
+            <li><span class="check">✔</span><span>資格取得サポート</span></li>
+            <li><span class="check">✔</span><span>在宅ワーク・リモートワーク支援</span></li>
+            <li><span class="check">✔</span><span>趣味・創作活動サポート</span></li>
           </ul>
         </div>
       </div>
@@ -234,84 +242,73 @@
           <p class="muted">複雑な問題を解決する</p>
           <div class="price">4,000円/時間 <span class="muted">〜</span></div>
           <ul class="list">
-            <li><span class="check">✔</span><span>役所での手続き代行</span></li>
-            <li><span class="check">✔</span><span>申請書類作成サポート</span></li>
-            <li><span class="check">✔</span><span>PC設定サポート（リモート）</span></li>
-            <li><span class="check">✔</span><span>各種リサーチ</span></li>
+            <li><span class="check">✔</span><span>行政手続き代行（委任状対応）</span></li>
+            <li><span class="check">✔</span><span>書類作成・提出代行</span></li>
+            <li><span class="check">✔</span><span>法律相談のための情報収集</span></li>
+            <li><span class="check">✔</span><span>金融・保険手続き代行</span></li>
           </ul>
         </div>
       </div>
+
+      <!-- 空白カード（レイアウト調整用） -->
+      <div style="background:transparent; border:none;"></div>
     </div>
 
     <p class="muted" style="text-align:center; margin-top:12px">
-      ※最低利用時間：1時間〜　※交通費別途（札幌市内500円、市外1,000円）
+      ※最低利用時間：1時間〜 ※交通費別途（札幌市内500円、市外1,000円）
     </p>
   </div>
 </section>
 
 <section id="pricing">
   <div class="container">
-    <h2 class="section-title">お得なサブスクリプションプラン</h2>
+    <h2 class="section-title">サブスクリプションプラン</h2>
     <p class="section-lead">定期利用の方向けに割引プランをご用意しています</p>
 
-    <div class="cards cards-3" style="max-width:1000px; margin:0 auto">
+    <div class="cards cards-3">
       <!-- ライト -->
       <div class="card plan">
         <div class="body">
-          <h3 style="margin:0 0 4px">ライトプラン</h3>
-          <div class="muted">月4回・各2時間</div>
-          <div style="margin:12px 0">
-            <span class="price">18,000円</span><span class="muted">/月</span><br>
-            <span class="muted" style="text-decoration:line-through">20,000円</span>
-            <span style="color:var(--accent); font-weight:700; margin-left:6px">10%OFF</span>
-          </div>
+          <h3>ライト</h3>
+          <p class="muted">月2時間まで利用可能</p>
+          <div class="price">5,800円<span class="muted">/月</span></div>
           <ul class="list">
-            <li><span class="check">✔</span><span>くらしサポートのみ</span></li>
-            <li><span class="check">✔</span><span>メールサポート</span></li>
-            <li><span class="check">✔</span><span>進捗報告</span></li>
+            <li><span class="check">✔</span><span>全サービスカテゴリー利用可</span></li>
+            <li><span class="check">✔</span><span>繰越なし</span></li>
+            <li><span class="cross">✖</span><span>優先予約</span></li>
           </ul>
-          <a class="btn block" href="#contact">お問い合わせ</a>
+          <a class="btn block" href="#contact">申し込む</a>
         </div>
       </div>
 
-      <!-- スタンダード（おすすめ） -->
+      <!-- スタンダード -->
       <div class="card plan reco">
         <div class="badge">おすすめ</div>
         <div class="body">
-          <h3 style="margin:0 0 4px">スタンダードプラン</h3>
-          <div class="muted">月8回・各2時間</div>
-          <div style="margin:12px 0">
-            <span class="price">34,000円</span><span class="muted">/月</span><br>
-            <span class="muted" style="text-decoration:line-through">40,000円</span>
-            <span style="color:var(--accent); font-weight:700; margin-left:6px">15%OFF</span>
-          </div>
+          <h3>スタンダード</h3>
+          <p class="muted">月5時間まで利用可能</p>
+          <div class="price">13,500円<span class="muted">/月</span></div>
           <ul class="list">
-            <li><span class="check">✔</span><span>全カテゴリー対応</span></li>
-            <li><span class="check">✔</span><span>あんしんサポート月2回まで</span></li>
-            <li><span class="check">✔</span><span>優先対応</span></li>
-            <li><span class="check">✔</span><span>詳細レポート</span></li>
+            <li><span class="check">✔</span><span>全サービスカテゴリー利用可</span></li>
+            <li><span class="check">✔</span><span>翌月まで繰越可能</span></li>
+            <li><span class="check">✔</span><span>優先予約</span></li>
           </ul>
-          <a class="btn primary block" href="#contact">お問い合わせ</a>
+          <a class="btn primary block" href="#contact">申し込む</a>
         </div>
       </div>
 
       <!-- プレミアム -->
       <div class="card plan">
         <div class="body">
-          <h3 style="margin:0 0 4px">プレミアムプラン</h3>
-          <div class="muted">月12回・各2時間</div>
-          <div style="margin:12px 0">
-            <span class="price">48,000円</span><span class="muted">/月</span><br>
-            <span class="muted" style="text-decoration:line-through">60,000円</span>
-            <span style="color:var(--accent); font-weight:700; margin-left:6px">20%OFF</span>
-          </div>
+          <h3>プレミアム</h3>
+          <p class="muted">月10時間まで利用可能</p>
+          <div class="price">25,000円<span class="muted">/月</span></div>
           <ul class="list">
-            <li><span class="check">✔</span><span>全カテゴリー無制限</span></li>
-            <li><span class="check">✔</span><span>専任コーディネーター</span></li>
-            <li><span class="check">✔</span><span>24時間以内対応保証</span></li>
-            <li><span class="check">✔</span><span>月次レポート</span></li>
+            <li><span class="check">✔</span><span>全サービスカテゴリー利用可</span></li>
+            <li><span class="check">✔</span><span>翌月まで繰越可能</span></li>
+            <li><span class="check">✔</span><span>優先予約</span></li>
           </ul>
-          <a class="btn block" href="#contact">お問い合わせ</a>
+          <a class="btn block" href="#contact">申し込む</a>
         </div>
       </div>
     </div>
@@ -320,10 +317,10 @@
 
 <section class="muted-bg">
   <div class="container">
-    <h2 class="section-title">ソトツナギ札幌の特徴</h2>
-    <div class="grid grid-3" style="gap:24px; margin-top:24px">
+    <h2 class="section-title">3つの安心ポイント</h2>
+    <div class="grid grid-3" style="gap:28px; margin-top:28px">
       <div class="feature">
-        <div class="pill" aria-hidden="true">✉</div>
+        <div class="pill" aria-hidden="true">📧</div>
         <h4>電話対応なし</h4>
         <p class="muted">すべてのお問い合わせはオンラインフォームまたはメールで受け付けます。お電話が苦手な方も安心です。</p>
       </div>
@@ -468,10 +465,38 @@
 <div id="toast" role="status" aria-live="polite">お問い合わせを受け付けました。メールにてご連絡いたします。</div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 重複リンクの削除（念のため）
+  const allLinks = document.querySelectorAll('a[href="#services"], a[href="#pricing"], a[href="#about"], a[href="#contact"]');
+  const validNavLinks = document.querySelectorAll('.global-nav a, #drawer a');
+  const validNavHrefs = Array.from(validNavLinks).map(a => a.href);
+  
+  allLinks.forEach(link => {
+    // 正当なナビゲーションリンクでない場合は削除
+    if (!validNavHrefs.includes(link.href) && !link.closest('.global-nav') && !link.closest('#drawer') && !link.closest('.btn')) {
+      // 親要素ごと削除（もし親が単なるコンテナーなら）
+      const parent = link.parentElement;
+      if (parent && parent.tagName === 'P' || parent.tagName === 'NAV' || parent.tagName === 'DIV') {
+        // 親要素に他の重要なコンテンツがない場合は親ごと削除
+        const siblings = Array.from(parent.children);
+        const allNavLinks = siblings.every(child => 
+          child.tagName === 'A' && (child.getAttribute('href') || '').startsWith('#')
+        );
+        if (allNavLinks) {
+          parent.remove();
+        } else {
+          link.remove();
+        }
+      } else {
+        link.remove();
+      }
+    }
+  });
+
   // モバイルメニュー
   const menuBtn = document.querySelector('.menu');
-  const drawer  = document.getElementById('drawer');
-  if(menuBtn){
+  const drawer = document.getElementById('drawer');
+  if (menuBtn) {
     menuBtn.addEventListener('click', () => {
       const open = drawer.style.display === 'block';
       drawer.style.display = open ? 'none' : 'block';
@@ -480,35 +505,17 @@
   }
 
   // 簡易フォーム送信（デモ）
-  const form  = document.getElementById('contact-form');
+  const form = document.getElementById('contact-form');
   const toast = document.getElementById('toast');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2200);
-    form.reset();
-  });
-
-  // —— 重複リンク列の除去（CSS :has 非対応ブラウザの保険）——
-  (function() {
-    const isDupMenu = el => {
-      if (!el) return false;
-      const sels = ['a[href="#services"]','a[href="#pricing"]','a[href="#about"]','a[href="#contact"]'];
-      const hasAll = sels.every(s => el.querySelector(s));
-      const prevIsHeader = el.previousElementSibling && el.previousElementSibling.tagName === 'HEADER';
-      return hasAll && prevIsHeader;
-    };
-    // header直後の候補（p/nav/div/ul/ol）を削除
-    const cand = document.querySelector('header + *');
-    if (cand && ['P','NAV','DIV','UL','OL'].includes(cand.tagName) && isDupMenu(cand)) {
-      cand.remove();
-    }
-    // 念のため、body直下に裸で出たpも削除
-    document.querySelectorAll('body > p').forEach(p => {
-      const sels = ['a[href="#services"]','a[href="#pricing"]','a[href="#about"]','a[href="#contact"]'];
-      if (sels.every(s => p.querySelector(s))) p.remove();
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+      form.reset();
     });
-  })();
+  }
+});
 </script>
 </body>
 </html>
