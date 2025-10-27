@@ -21,6 +21,8 @@
   .head{display:flex; align-items:center; justify-content:space-between; padding:12px 0}
   .brand{display:flex; align-items:center; gap:10px}
   .logo{width:40px; height:40px; border-radius:999px; background:var(--primary); display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:800}
+  
+  /* 正規のナビゲーションのみスタイル適用 */
   nav.global-nav a{margin-left:18px; text-decoration:none; color:#111}
   nav.global-nav a:hover{color:var(--primary)}
 
@@ -85,26 +87,51 @@
     #drawer a + a{border-top:1px solid var(--line)}
   }
 
-  /* 重複要素の完全削除 - より強力なルール */
-  body > :is(p,nav,div,ul,ol,section,header) a[href="#services"]:not(.global-nav a):not(#drawer a) {
-    display: none !important;
-  }
-  body > :is(p,nav,div,ul,ol,section,header) a[href="#pricing"]:not(.global-nav a):not(#drawer a) {
-    display: none !important;
-  }
-  body > :is(p,nav,div,ul,ol,section,header) a[href="#about"]:not(.global-nav a):not(#drawer a) {
-    display: none !important;
-  }
-  body > :is(p,nav,div,ul,ol,section,header) a[href="#contact"]:not(.global-nav a):not(#drawer a) {
+  /* ========== 最強の重複削除CSS ========== */
+  
+  /* 1. 正規のナビゲーション以外は全て非表示 */
+  nav:not(.global-nav) {
     display: none !important;
   }
   
-  /* ヘッダー直後の要素に重複リンクがある場合は非表示 */
-  header + * {
+  /* 2. ヘッダー直下のあらゆる要素で重複リンクを含むものを削除 */
+  body > p a[href="#services"],
+  body > p a[href="#pricing"],
+  body > p a[href="#about"],
+  body > p a[href="#contact"],
+  body > nav:not(header nav) a[href="#services"],
+  body > nav:not(header nav) a[href="#pricing"],
+  body > nav:not(header nav) a[href="#about"],
+  body > nav:not(header nav) a[href="#contact"],
+  body > div:not(.container) a[href="#services"]:not(.btn),
+  body > div:not(.container) a[href="#pricing"]:not(.btn),
+  body > div:not(.container) a[href="#about"]:not(.btn),
+  body > div:not(.container) a[href="#contact"]:not(.btn) {
     display: none !important;
   }
-  header + section {
-    display: block !important;
+  
+  /* 3. ヘッダー外のナビゲーションリンクの親要素も削除 */
+  body > p:has(a[href="#services"], a[href="#pricing"], a[href="#about"], a[href="#contact"]):not(section p) {
+    display: none !important;
+  }
+  
+  /* 4. ヘッダーとヒーローセクションの間の不要な要素を削除 */
+  header ~ *:not(section):not(footer):not(#toast):not(script) {
+    display: none !important;
+  }
+  
+  /* 5. 万が一のために、左寄せのテキストリンクを隠す（ボタン以外） */
+  a[href="#services"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
+    display: none !important;
+  }
+  a[href="#pricing"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
+    display: none !important;
+  }
+  a[href="#about"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
+    display: none !important;
+  }
+  a[href="#contact"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
+    display: none !important;
   }
 </style>
 </head>
@@ -466,37 +493,87 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // 重複リンクの削除（念のため）
-  const allLinks = document.querySelectorAll('a[href="#services"], a[href="#pricing"], a[href="#about"], a[href="#contact"]');
-  const validNavLinks = document.querySelectorAll('.global-nav a, #drawer a');
-  const validNavHrefs = Array.from(validNavLinks).map(a => a.href);
   
-  allLinks.forEach(link => {
-    // 正当なナビゲーションリンクでない場合は削除
-    if (!validNavHrefs.includes(link.href) && !link.closest('.global-nav') && !link.closest('#drawer') && !link.closest('.btn')) {
-      // 親要素ごと削除（もし親が単なるコンテナーなら）
-      const parent = link.parentElement;
-      if (parent && parent.tagName === 'P' || parent.tagName === 'NAV' || parent.tagName === 'DIV') {
-        // 親要素に他の重要なコンテンツがない場合は親ごと削除
-        const siblings = Array.from(parent.children);
-        const allNavLinks = siblings.every(child => 
-          child.tagName === 'A' && (child.getAttribute('href') || '').startsWith('#')
-        );
-        if (allNavLinks) {
-          parent.remove();
+  // ========== 超強力な重複削除JavaScript ==========
+  // 1. 全てのナビゲーションリンクを取得
+  const navSelectors = ['a[href="#services"]', 'a[href="#pricing"]', 'a[href="#about"]', 'a[href="#contact"]'];
+  const validNavContainers = ['.global-nav', '#drawer'];
+  
+  navSelectors.forEach(selector => {
+    const allLinks = document.querySelectorAll(selector);
+    
+    allLinks.forEach(link => {
+      // 正規のナビゲーション、ドロワー、ボタン、フッター内のリンクは残す
+      let isValid = false;
+      
+      // 正規のナビゲーションかチェック
+      validNavContainers.forEach(container => {
+        if (link.closest(container)) {
+          isValid = true;
+        }
+      });
+      
+      // ボタンかフッター内のリンクかチェック
+      if (link.classList.contains('btn') || link.closest('footer')) {
+        isValid = true;
+      }
+      
+      // 無効なリンクは削除
+      if (!isValid) {
+        // 親要素も確認
+        const parent = link.parentElement;
+        
+        // 親要素が単なるリンクのコンテナーなら親ごと削除
+        if (parent && (parent.tagName === 'P' || parent.tagName === 'NAV' || parent.tagName === 'DIV')) {
+          const siblings = Array.from(parent.children);
+          const allAreNavLinks = siblings.every(child => 
+            child.tagName === 'A' && navSelectors.some(sel => child.matches(sel))
+          );
+          
+          if (allAreNavLinks && !parent.closest('header') && !parent.closest('section')) {
+            parent.remove();
+          } else {
+            link.remove();
+          }
         } else {
           link.remove();
         }
-      } else {
-        link.remove();
+      }
+    });
+  });
+  
+  // 2. ヘッダー直後の不要な要素を削除
+  const header = document.querySelector('header');
+  if (header) {
+    let nextElement = header.nextElementSibling;
+    while (nextElement && nextElement.tagName !== 'SECTION' && nextElement.tagName !== 'FOOTER') {
+      const toRemove = nextElement;
+      nextElement = nextElement.nextElementSibling;
+      toRemove.remove();
+    }
+  }
+  
+  // 3. body直下の段落やナビゲーションで重複を含むものを削除
+  const bodyChildren = Array.from(document.body.children);
+  bodyChildren.forEach(element => {
+    if (element.tagName === 'P' || element.tagName === 'NAV' || element.tagName === 'DIV') {
+      // ヘッダー、セクション、フッター、トーストは除外
+      if (!element.closest('header') && !element.closest('section') && 
+          !element.closest('footer') && element.id !== 'toast') {
+        
+        // ナビゲーションリンクを含む場合は削除
+        const hasNavLinks = navSelectors.some(sel => element.querySelector(sel));
+        if (hasNavLinks) {
+          element.remove();
+        }
       }
     }
   });
-
+  
   // モバイルメニュー
   const menuBtn = document.querySelector('.menu');
   const drawer = document.getElementById('drawer');
-  if (menuBtn) {
+  if (menuBtn && drawer) {
     menuBtn.addEventListener('click', () => {
       const open = drawer.style.display === 'block';
       drawer.style.display = open ? 'none' : 'block';
@@ -507,7 +584,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 簡易フォーム送信（デモ）
   const form = document.getElementById('contact-form');
   const toast = document.getElementById('toast');
-  if (form) {
+  if (form && toast) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       toast.classList.add('show');
