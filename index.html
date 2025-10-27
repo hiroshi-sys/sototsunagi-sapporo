@@ -85,18 +85,18 @@
     #drawer a + a{border-top:1px solid var(--line)}
   }
 
-  /* —— 重複ナビ除去 —— */
-  /* ヘッダー以外の nav を消す（正規ナビに .global-nav を付与） */
-  nav:not(.global-nav){
-    display: none !important;
-  }
-  /* ヘッダー直後に段落/リスト/任意ブロックで出るリンク列も消す（保険） */
+  /* —— 重複ナビ除去（確実版） —— */
+  /* 正規ナビ以外の nav を非表示 */
+  nav:not(.global-nav){ display:none !important; }
+
+  /* ヘッダー直後に段落/リスト/任意ブロックで現れる重複リンク列も非表示 */
   header + *:is(p,nav,div,ul,ol):has(> a[href="#services"]):has(> a[href="#pricing"]):has(> a[href="#about"]):has(> a[href="#contact"]) {
-    display: none !important;
+    display:none !important;
   }
-  /* さらに本文直下に裸で現れた場合の保険 */
+
+  /* 本文直下に裸で現れた段落の重複リンク列も非表示（保険） */
   body > p:has(a[href="#services"]):has(a[href="#pricing"]):has(a[href="#about"]):has(a[href="#contact"]) {
-    display: none !important;
+    display:none !important;
   }
 </style>
 </head>
@@ -484,16 +484,31 @@
   const toast = document.getElementById('toast');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    // 実送信の代わりにトースト表示
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2200);
     form.reset();
   });
 
-  // ★後で実送信に切り替える場合：
-  // 1) Googleフォームを作成 → 「回答のURL」を取得
-  // 2) 上の submit 処理で fetch() してPOST または フォームの action にそのURLを設定
-  // 3) メール直書きはスパムが増える可能性があるため、フォーム経由が安心です
+  // —— 重複リンク列の除去（CSS :has 非対応ブラウザの保険）——
+  (function() {
+    const isDupMenu = el => {
+      if (!el) return false;
+      const sels = ['a[href="#services"]','a[href="#pricing"]','a[href="#about"]','a[href="#contact"]'];
+      const hasAll = sels.every(s => el.querySelector(s));
+      const prevIsHeader = el.previousElementSibling && el.previousElementSibling.tagName === 'HEADER';
+      return hasAll && prevIsHeader;
+    };
+    // header直後の候補（p/nav/div/ul/ol）を削除
+    const cand = document.querySelector('header + *');
+    if (cand && ['P','NAV','DIV','UL','OL'].includes(cand.tagName) && isDupMenu(cand)) {
+      cand.remove();
+    }
+    // 念のため、body直下に裸で出たpも削除
+    document.querySelectorAll('body > p').forEach(p => {
+      const sels = ['a[href="#services"]','a[href="#pricing"]','a[href="#about"]','a[href="#contact"]'];
+      if (sels.every(s => p.querySelector(s))) p.remove();
+    });
+  })();
 </script>
 </body>
 </html>
