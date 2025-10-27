@@ -73,6 +73,11 @@
     #drawer a{display:block; padding:8px 12px; text-decoration:none; color:#111}
     #drawer a + a{border-top:1px solid var(--line)}
   }
+
+  /* —— 重複ナビ除去：ヘッダー以外の nav を非表示 —— */
+  nav:not(.global-nav){
+    display: none !important;
+  }
 </style>
 </head>
 <body>
@@ -86,7 +91,7 @@
         <div style="font-size:12px; color:var(--muted)">あなたの代わりに、外の世界とつながる</div>
       </div>
     </div>
-    <nav aria-label="グローバル">
+    <nav class="global-nav" aria-label="グローバル">
       <a href="#services">サービス</a>
       <a href="#pricing">料金</a>
       <a href="#about">私たちについて</a>
