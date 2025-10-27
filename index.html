@@ -14,6 +14,7 @@
   *{box-sizing:border-box}
   html,body{margin:0; padding:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,'Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif; color:var(--text); line-height:1.7}
   a{color:inherit}
+
   /* ヘッダー */
   header{position:sticky; top:0; z-index:20; backdrop-filter:saturate(180%) blur(8px); background:rgba(255,255,255,.92); border-bottom:1px solid var(--line)}
   .container{max-width:1100px; margin:0 auto; padding:0 20px}
@@ -22,16 +23,19 @@
   .logo{width:40px; height:40px; border-radius:999px; background:var(--primary); display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:800}
   nav a{margin-left:18px; text-decoration:none; color:#111}
   nav a:hover{color:var(--primary)}
+
   /* ヒーロー */
   .hero{background:var(--bg); color:var(--fg); padding:72px 0}
   .hero h1{margin:0 0 10px; font-size:clamp(28px,5vw,44px)}
   .badge{display:inline-flex; align-items:center; gap:8px; color:var(--primary); background:rgba(37,99,235,.12); padding:8px 12px; border-radius:999px; font-weight:600; font-size:14px}
   .grid{display:grid; gap:24px}
   @media(min-width:920px){ .grid-2{grid-template-columns:1fr 1fr} .grid-3{grid-template-columns:repeat(3,1fr)} .grid-2-3{grid-template-columns:2fr 3fr} }
+
   /* セクション共通 */
   section{padding:64px 0}
   h2.section-title{font-size:clamp(22px,4.2vw,32px); margin:0 0 8px; text-align:center}
   p.section-lead{margin:0 auto 28px; color:var(--muted); text-align:center; max-width:720px}
+
   /* カード */
   .cards{display:grid; gap:16px}
   @media(min-width:760px){ .cards-2{grid-template-columns:repeat(2,1fr)} }
@@ -45,25 +49,32 @@
   .list li{display:flex; gap:8px; align-items:flex-start; margin:8px 0; color:var(--muted)}
   .check{color:var(--accent); margin-top:2px}
   .cross{color:var(--danger); margin-top:2px}
+
   /* プラン */
   .plan{position:relative}
   .plan .badge{position:absolute; left:50%; transform:translate(-50%,-18px); background:var(--primary); color:#fff}
   .plan.reco{border-color:var(--primary); box-shadow:0 8px 22px rgba(37,99,235,.15)}
+
   /* ボタン */
   .btn{display:inline-block; text-decoration:none; padding:10px 16px; border-radius:999px; font-weight:600; text-align:center; border:1px solid var(--line); background:#fff}
   .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary)}
   .btn.block{width:100%}
   .btn:hover{filter:brightness(1.05)}
+
   /* 情報ブロック */
   .feature{ text-align:center }
   .pill{display:inline-flex; align-items:center; justify-content:center; width:64px; height:64px; border-radius:999px; background:rgba(37,99,235,.12); color:var(--primary); margin:0 auto 10px}
+
   /* 背景 */
   .muted-bg{background:var(--surface)}
+
   /* フッター */
   footer{border-top:1px solid var(--line); background:#f6f7f9; color:var(--muted)}
+
   /* トースト */
   #toast{position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111; color:#fff; padding:12px 16px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,.2); opacity:0; pointer-events:none; transition:opacity .25s}
   #toast.show{opacity:1}
+
   /* 小さめ画面のナビ */
   .menu{display:none}
   @media(max-width:720px){
@@ -74,8 +85,17 @@
     #drawer a + a{border-top:1px solid var(--line)}
   }
 
-  /* —— 重複ナビ除去：ヘッダー以外の nav を非表示 —— */
+  /* —— 重複ナビ除去 —— */
+  /* ヘッダー以外の nav を消す（正規ナビに .global-nav を付与） */
   nav:not(.global-nav){
+    display: none !important;
+  }
+  /* ヘッダー直後に段落/リスト/任意ブロックで出るリンク列も消す（保険） */
+  header + *:is(p,nav,div,ul,ol):has(> a[href="#services"]):has(> a[href="#pricing"]):has(> a[href="#about"]):has(> a[href="#contact"]) {
+    display: none !important;
+  }
+  /* さらに本文直下に裸で現れた場合の保険 */
+  body > p:has(a[href="#services"]):has(a[href="#pricing"]):has(a[href="#about"]):has(a[href="#contact"]) {
     display: none !important;
   }
 </style>
