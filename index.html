@@ -87,51 +87,41 @@
     #drawer a + a{border-top:1px solid var(--line)}
   }
 
-  /* ========== 最強の重複削除CSS ========== */
-  
-  /* 1. 正規のナビゲーション以外は全て非表示 */
-  nav:not(.global-nav) {
+  /* ========== 重複ナビ完全ブロック（header以外を隠す） ========== */
+  /* 1) 対象アンカーを一旦すべて非表示 */
+  :where(body) :is(
+    a[href="#services"],
+    a[href="#pricing"],
+    a[href="#about"],
+    a[href="#contact"]
+  ){
     display: none !important;
   }
-  
-  /* 2. ヘッダー直下のあらゆる要素で重複リンクを含むものを削除 */
-  body > p a[href="#services"],
-  body > p a[href="#pricing"],
-  body > p a[href="#about"],
-  body > p a[href="#contact"],
-  body > nav:not(header nav) a[href="#services"],
-  body > nav:not(header nav) a[href="#pricing"],
-  body > nav:not(header nav) a[href="#about"],
-  body > nav:not(header nav) a[href="#contact"],
-  body > div:not(.container) a[href="#services"]:not(.btn),
-  body > div:not(.container) a[href="#pricing"]:not(.btn),
-  body > div:not(.container) a[href="#about"]:not(.btn),
-  body > div:not(.container) a[href="#contact"]:not(.btn) {
-    display: none !important;
-  }
-  
-  /* 3. ヘッダー外のナビゲーションリンクの親要素も削除 */
-  body > p:has(a[href="#services"], a[href="#pricing"], a[href="#about"], a[href="#contact"]):not(section p) {
-    display: none !important;
-  }
-  
-  /* 4. ヘッダーとヒーローセクションの間の不要な要素を削除 */
-  header ~ *:not(section):not(footer):not(#toast):not(script) {
-    display: none !important;
-  }
-  
-  /* 5. 万が一のために、左寄せのテキストリンクを隠す（ボタン以外） */
-  a[href="#services"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
-    display: none !important;
-  }
-  a[href="#pricing"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
-    display: none !important;
-  }
-  a[href="#about"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
-    display: none !important;
-  }
-  a[href="#contact"]:not(.btn):not(.global-nav a):not(#drawer a):not(footer a) {
-    display: none !important;
+  /* 2) 正規の場所だけ再表示（ヘッダー/ドロワー/フッター/ボタン） */
+  header :is(
+    a[href="#services"],
+    a[href="#pricing"],
+    a[href="#about"],
+    a[href="#contact"]
+  ),
+  #drawer :is(
+    a[href="#services"],
+    a[href="#pricing"],
+    a[href="#about"],
+    a[href="#contact"]
+  ),
+  footer :is(
+    a[href="#services"],
+    a[href="#pricing"],
+    a[href="#about"],
+    a[href="#contact"]
+  ),
+  a.btn[href="#services"],
+  a.btn[href="#pricing"],
+  a.btn[href="#about"],
+  a.btn[href="#contact"]{
+    display: inline !important;
+    text-decoration: none;
   }
 </style>
 </head>
@@ -197,87 +187,71 @@
     <p class="section-lead">あなたのニーズに合わせた、きめ細やかなサービスをご提供します</p>
 
     <div class="cards cards-3">
-      <!-- くらし -->
-      <div class="card">
-        <div class="body">
-          <div class="iconbox" aria-hidden="true">🏠</div>
-          <h3>くらしサポート</h3>
-          <p class="muted">日常生活の基盤を守る</p>
-          <div class="price">2,500円/時間 <span class="muted">〜</span></div>
-          <ul class="list">
-            <li><span class="check">✔</span><span>生活環境整備（掃除・片付け・ゴミ出し）</span></li>
-            <li><span class="check">✔</span><span>食事・栄養サポート</span></li>
-            <li><span class="check">✔</span><span>季節・天候対応（雪かきなど）</span></li>
-            <li><span class="check">✔</span><span>不動産・住居情報収集</span></li>
-          </ul>
-        </div>
-      </div>
+      <div class="card"><div class="body">
+        <div class="iconbox" aria-hidden="true">🏠</div>
+        <h3>くらしサポート</h3>
+        <p class="muted">日常生活の基盤を守る</p>
+        <div class="price">2,500円/時間 <span class="muted">〜</span></div>
+        <ul class="list">
+          <li><span class="check">✔</span><span>生活環境整備（掃除・片付け・ゴミ出し）</span></li>
+          <li><span class="check">✔</span><span>食事・栄養サポート</span></li>
+          <li><span class="check">✔</span><span>季節・天候対応（雪かきなど）</span></li>
+          <li><span class="check">✔</span><span>不動産・住居情報収集</span></li>
+        </ul>
+      </div></div>
 
-      <!-- すこやか -->
-      <div class="card">
-        <div class="body">
-          <div class="iconbox" aria-hidden="true">❤</div>
-          <h3>すこやかサポート</h3>
-          <p class="muted">心と体の健康を支える</p>
-          <div class="price">3,000円/時間 <span class="muted">〜</span></div>
-          <ul class="list">
-            <li><span class="check">✔</span><span>健康管理・通院同行</span></li>
-            <li><span class="check">✔</span><span>薬局への薬の受け取り</span></li>
-            <li><span class="check">✔</span><span>メンタルヘルスサポート</span></li>
-            <li><span class="check">✔</span><span>健康情報収集・レポート作成</span></li>
-          </ul>
-        </div>
-      </div>
+      <div class="card"><div class="body">
+        <div class="iconbox" aria-hidden="true">❤</div>
+        <h3>すこやかサポート</h3>
+        <p class="muted">心と体の健康を支える</p>
+        <div class="price">3,000円/時間 <span class="muted">〜</span></div>
+        <ul class="list">
+          <li><span class="check">✔</span><span>健康管理・通院同行</span></li>
+          <li><span class="check">✔</span><span>薬局への薬の受け取り</span></li>
+          <li><span class="check">✔</span><span>メンタルヘルスサポート</span></li>
+          <li><span class="check">✔</span><span>健康情報収集・レポート作成</span></li>
+        </ul>
+      </div></div>
 
-      <!-- きずな -->
-      <div class="card">
-        <div class="body">
-          <div class="iconbox" aria-hidden="true">👥</div>
-          <h3>きずなサポート</h3>
-          <p class="muted">人とのつながりを維持する</p>
-          <div class="price">3,500円/時間 <span class="muted">〜</span></div>
-          <ul class="list">
-            <li><span class="check">✔</span><span>家族・友人への連絡代行</span></li>
-            <li><span class="check">✔</span><span>オンライン交流イベント参加</span></li>
-            <li><span class="check">✔</span><span>SNS運用・コミュニティ管理</span></li>
-            <li><span class="check">✔</span><span>ギフト選定・手配</span></li>
-          </ul>
-        </div>
-      </div>
+      <div class="card"><div class="body">
+        <div class="iconbox" aria-hidden="true">👥</div>
+        <h3>きずなサポート</h3>
+        <p class="muted">人とのつながりを維持する</p>
+        <div class="price">3,500円/時間 <span class="muted">〜</span></div>
+        <ul class="list">
+          <li><span class="check">✔</span><span>家族・友人への連絡代行</span></li>
+          <li><span class="check">✔</span><span>オンライン交流イベント参加</span></li>
+          <li><span class="check">✔</span><span>SNS運用・コミュニティ管理</span></li>
+          <li><span class="check">✔</span><span>ギフト選定・手配</span></li>
+        </ul>
+      </div></div>
 
-      <!-- みらい -->
-      <div class="card">
-        <div class="body">
-          <div class="iconbox" aria-hidden="true">🎯</div>
-          <h3>みらいサポート</h3>
-          <p class="muted">成長と自己実現を応援する</p>
-          <div class="price">3,000円/時間 <span class="muted">〜</span></div>
-          <ul class="list">
-            <li><span class="check">✔</span><span>教育・職業訓練情報収集</span></li>
-            <li><span class="check">✔</span><span>資格取得サポート</span></li>
-            <li><span class="check">✔</span><span>在宅ワーク・リモートワーク支援</span></li>
-            <li><span class="check">✔</span><span>趣味・創作活動サポート</span></li>
-          </ul>
-        </div>
-      </div>
+      <div class="card"><div class="body">
+        <div class="iconbox" aria-hidden="true">🎯</div>
+        <h3>みらいサポート</h3>
+        <p class="muted">成長と自己実現を応援する</p>
+        <div class="price">3,000円/時間 <span class="muted">〜</span></div>
+        <ul class="list">
+          <li><span class="check">✔</span><span>教育・職業訓練情報収集</span></li>
+          <li><span class="check">✔</span><span>資格取得サポート</span></li>
+          <li><span class="check">✔</span><span>在宅ワーク・リモートワーク支援</span></li>
+          <li><span class="check">✔</span><span>趣味・創作活動サポート</span></li>
+        </ul>
+      </div></div>
 
-      <!-- あんしん -->
-      <div class="card">
-        <div class="body">
-          <div class="iconbox" aria-hidden="true">🛡️</div>
-          <h3>あんしんサポート</h3>
-          <p class="muted">複雑な問題を解決する</p>
-          <div class="price">4,000円/時間 <span class="muted">〜</span></div>
-          <ul class="list">
-            <li><span class="check">✔</span><span>行政手続き代行（委任状対応）</span></li>
-            <li><span class="check">✔</span><span>書類作成・提出代行</span></li>
-            <li><span class="check">✔</span><span>法律相談のための情報収集</span></li>
-            <li><span class="check">✔</span><span>金融・保険手続き代行</span></li>
-          </ul>
-        </div>
-      </div>
+      <div class="card"><div class="body">
+        <div class="iconbox" aria-hidden="true">🛡️</div>
+        <h3>あんしんサポート</h3>
+        <p class="muted">複雑な問題を解決する</p>
+        <div class="price">4,000円/時間 <span class="muted">〜</span></div>
+        <ul class="list">
+          <li><span class="check">✔</span><span>行政手続き代行（委任状対応）</span></li>
+          <li><span class="check">✔</span><span>書類作成・提出代行</span></li>
+          <li><span class="check">✔</span><span>法律相談のための情報収集</span></li>
+          <li><span class="check">✔</span><span>金融・保険手続き代行</span></li>
+        </ul>
+      </div></div>
 
-      <!-- 空白カード（レイアウト調整用） -->
       <div style="background:transparent; border:none;"></div>
     </div>
 
@@ -293,22 +267,18 @@
     <p class="section-lead">定期利用の方向けに割引プランをご用意しています</p>
 
     <div class="cards cards-3">
-      <!-- ライト -->
-      <div class="card plan">
-        <div class="body">
-          <h3>ライト</h3>
-          <p class="muted">月2時間まで利用可能</p>
-          <div class="price">5,800円<span class="muted">/月</span></div>
-          <ul class="list">
-            <li><span class="check">✔</span><span>全サービスカテゴリー利用可</span></li>
-            <li><span class="check">✔</span><span>繰越なし</span></li>
-            <li><span class="cross">✖</span><span>優先予約</span></li>
-          </ul>
-          <a class="btn block" href="#contact">申し込む</a>
-        </div>
-      </div>
+      <div class="card plan"><div class="body">
+        <h3>ライト</h3>
+        <p class="muted">月2時間まで利用可能</p>
+        <div class="price">5,800円<span class="muted">/月</span></div>
+        <ul class="list">
+          <li><span class="check">✔</span><span>全サービスカテゴリー利用可</span></li>
+          <li><span class="check">✔</span><span>繰越なし</span></li>
+          <li><span class="cross">✖</span><span>優先予約</span></li>
+        </ul>
+        <a class="btn block" href="#contact">申し込む</a>
+      </div></div>
 
-      <!-- スタンダード -->
       <div class="card plan reco">
         <div class="badge">おすすめ</div>
         <div class="body">
@@ -324,20 +294,17 @@
         </div>
       </div>
 
-      <!-- プレミアム -->
-      <div class="card plan">
-        <div class="body">
-          <h3>プレミアム</h3>
-          <p class="muted">月10時間まで利用可能</p>
-          <div class="price">25,000円<span class="muted">/月</span></div>
-          <ul class="list">
-            <li><span class="check">✔</span><span>全サービスカテゴリー利用可</span></li>
-            <li><span class="check">✔</span><span>翌月まで繰越可能</span></li>
-            <li><span class="check">✔</span><span>優先予約</span></li>
-          </ul>
-          <a class="btn block" href="#contact">申し込む</a>
-        </div>
-      </div>
+      <div class="card plan"><div class="body">
+        <h3>プレミアム</h3>
+        <p class="muted">月10時間まで利用可能</p>
+        <div class="price">25,000円<span class="muted">/月</span></div>
+        <ul class="list">
+          <li><span class="check">✔</span><span>全サービスカテゴリー利用可</span></li>
+          <li><span class="check">✔</span><span>翌月まで繰越可能</span></li>
+          <li><span class="check">✔</span><span>優先予約</span></li>
+        </ul>
+        <a class="btn block" href="#contact">申し込む</a>
+      </div></div>
     </div>
   </div>
 </section>
@@ -360,26 +327,6 @@
         <div class="pill" aria-hidden="true">🛡️</div>
         <h4>代理人として対応</h4>
         <p class="muted">役所での手続きや窓口対応など、あなたの代わりに私たちが対応します。委任状で対応範囲が広がります。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container" style="max-width:860px">
-    <h2 class="section-title">安全のため対応できないこと</h2>
-    <p class="section-lead">犯罪リスク回避のため、以下のサービスは提供しておりません</p>
-    <div class="card">
-      <div class="body">
-        <ul class="list">
-          <li><span class="cross">✖</span><span>荷物の持ち運び（受け子リスクのため）</span></li>
-          <li><span class="cross">✖</span><span>現金の受け渡し・預かり</span></li>
-          <li><span class="cross">✖</span><span>貴重品の運搬・保管</span></li>
-          <li><span class="cross">✖</span><span>身分証明書等の重要書類の持ち運び</span></li>
-        </ul>
-        <div style="margin-top:14px; background:var(--surface); border:1px solid var(--line); padding:12px; border-radius:10px; color:var(--muted); font-size:14px">
-          ※書類の受け取り・提出は対応可能ですが、身分証明書やマイナンバーカードなどの重要書類の持ち運びは安全上お断りしております。
-        </div>
       </div>
     </div>
   </div>
@@ -493,84 +440,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  
-  // ========== 超強力な重複削除JavaScript ==========
-  // 1. 全てのナビゲーションリンクを取得
-  const navSelectors = ['a[href="#services"]', 'a[href="#pricing"]', 'a[href="#about"]', 'a[href="#contact"]'];
-  const validNavContainers = ['.global-nav', '#drawer'];
-  
-  navSelectors.forEach(selector => {
-    const allLinks = document.querySelectorAll(selector);
-    
-    allLinks.forEach(link => {
-      // 正規のナビゲーション、ドロワー、ボタン、フッター内のリンクは残す
-      let isValid = false;
-      
-      // 正規のナビゲーションかチェック
-      validNavContainers.forEach(container => {
-        if (link.closest(container)) {
-          isValid = true;
-        }
-      });
-      
-      // ボタンかフッター内のリンクかチェック
-      if (link.classList.contains('btn') || link.closest('footer')) {
-        isValid = true;
-      }
-      
-      // 無効なリンクは削除
-      if (!isValid) {
-        // 親要素も確認
-        const parent = link.parentElement;
-        
-        // 親要素が単なるリンクのコンテナーなら親ごと削除
-        if (parent && (parent.tagName === 'P' || parent.tagName === 'NAV' || parent.tagName === 'DIV')) {
-          const siblings = Array.from(parent.children);
-          const allAreNavLinks = siblings.every(child => 
-            child.tagName === 'A' && navSelectors.some(sel => child.matches(sel))
-          );
-          
-          if (allAreNavLinks && !parent.closest('header') && !parent.closest('section')) {
-            parent.remove();
-          } else {
-            link.remove();
-          }
-        } else {
-          link.remove();
-        }
-      }
-    });
-  });
-  
-  // 2. ヘッダー直後の不要な要素を削除
-  const header = document.querySelector('header');
-  if (header) {
-    let nextElement = header.nextElementSibling;
-    while (nextElement && nextElement.tagName !== 'SECTION' && nextElement.tagName !== 'FOOTER') {
-      const toRemove = nextElement;
-      nextElement = nextElement.nextElementSibling;
-      toRemove.remove();
-    }
-  }
-  
-  // 3. body直下の段落やナビゲーションで重複を含むものを削除
-  const bodyChildren = Array.from(document.body.children);
-  bodyChildren.forEach(element => {
-    if (element.tagName === 'P' || element.tagName === 'NAV' || element.tagName === 'DIV') {
-      // ヘッダー、セクション、フッター、トーストは除外
-      if (!element.closest('header') && !element.closest('section') && 
-          !element.closest('footer') && element.id !== 'toast') {
-        
-        // ナビゲーションリンクを含む場合は削除
-        const hasNavLinks = navSelectors.some(sel => element.querySelector(sel));
-        if (hasNavLinks) {
-          element.remove();
-        }
-      }
-    }
-  });
-  
-  // モバイルメニュー
+  // モバイルメニュー開閉
   const menuBtn = document.querySelector('.menu');
   const drawer = document.getElementById('drawer');
   if (menuBtn && drawer) {
