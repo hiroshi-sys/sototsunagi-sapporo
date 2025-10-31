@@ -121,6 +121,11 @@
   a.btn[href$="#contact"]{
     display:inline !important; text-decoration:none;
   }
+
+  /* 3) ヘッダー直下に紛れ込む不要行を強制非表示（保険） */
+  header + p, header + nav, header + div {
+    display: none !important;
+  }
 </style>
 </head>
 <body>
