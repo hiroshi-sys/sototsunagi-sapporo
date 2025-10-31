@@ -79,6 +79,7 @@
 
   /* 小さめ画面のナビ */
   .menu{display:none}
+  #drawer{display:none !important}
   @media(max-width:720px){
     nav.global-nav{display:none}
     .menu{display:inline-block}
@@ -87,45 +88,7 @@
     #drawer a + a{border-top:1px solid var(--line)}
   }
 
-  /* ========== 重複ナビ完全ブロック（global-nav 以外は隠す） ========== */
-  /* 1) 対象アンカーを一旦すべて非表示（/#services など末尾一致も含めて潰す） */
-  :where(body) :is(
-    a[href$="#services"],
-    a[href$="#pricing"],
-    a[href$="#about"],
-    a[href$="#contact"]
-  ){ display:none !important; }
 
-  /* 2) 例外：正規の場所だけ再表示（ヘッダーの .global-nav ／モバイル #drawer／フッター／ボタン） */
-  header nav.global-nav :is(
-    a[href$="#services"],
-    a[href$="#pricing"],
-    a[href$="#about"],
-    a[href$="#contact"]
-  ),
-  #drawer :is(
-    a[href$="#services"],
-    a[href$="#pricing"],
-    a[href$="#about"],
-    a[href$="#contact"]
-  ),
-  footer :is(
-    a[href$="#services"],
-    a[href$="#pricing"],
-    a[href$="#about"],
-    a[href$="#contact"]
-  ),
-  a.btn[href$="#services"],
-  a.btn[href$="#pricing"],
-  a.btn[href$="#about"],
-  a.btn[href$="#contact"]{
-    display:inline !important; text-decoration:none;
-  }
-
-  /* 3) ヘッダー直下に紛れ込む不要行を強制非表示（保険） */
-  header + p, header + nav, header + div {
-    display: none !important;
-  }
 </style>
 </head>
 <body>
